@@ -17,13 +17,13 @@ Get some TestAda from the faucet or transfer to the issuer's address from anothe
 
 
 ## **Mint Come and Go Proof Token**
-Use this utxo to replace the oref in the exports of the NFT.hs file and nftCurrencySymbol of the WATMint.hs file.
+Use this utxo to replace the oref in the exports of the /src/Contracts/Samples/NFT.hs file and nftCurrencySymbol of the src/Contracts/WATMint.hs file.
 ```sh
 utxos issuer 
 ``` 
 
 
-Export policy
+Export nft minting policy 
 ```sh
 jamb -w nft
 ```
@@ -33,8 +33,8 @@ T=$(token -p nft jambtoken)
 ```
 
 As usual, select a suitable UTXO input from issuer's address (utxos issuer) and save it to the variable U. The input should contain at least a few ADA.
-
-We'll also need to calculate the minimum amount of ADA required for alice to mint a single unit of our asset $T. Assign the output of this command to a temporary variable MIN_U:
+We'll also need to calculate the minimum amount of ADA required for alice to mint a single unit of our asset $T. 
+Assign the output of this command to a temporary variable MIN_U:
 
 ```sh
 cardano-cli query protocol-parameters \
@@ -43,7 +43,7 @@ cardano-cli query protocol-parameters \
 MIN_U=$(min-utxo issuer 1 $T)
 ```
 
-Build sing and sumbit minting transaction
+Build sign and sumbit minting transaction
 ```sh
 cardano-cli transaction build \
 --tx-in $U \
@@ -113,8 +113,8 @@ utxos watm-validator
 
 A user should query the datum locked at watm-validator and update it accordingly. We cannot do that from cardano-cli but we have some datums pre-exported
 
-generate keys for alice and bob
-send each 100 ada from issuer
+generate keys for alice 
+send some ada from issuer
 
 ### **Mint 1 NFT for alice using "ADA" voucher**
 Save a utxo from alice in UA variable
