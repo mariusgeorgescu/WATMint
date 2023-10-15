@@ -19,15 +19,15 @@ import Contracts.Samples.Simple qualified as Simple
 import Contracts.Samples.SimpleGuessing qualified as SimpleGuessing
 import Contracts.Samples.SimpleTyped qualified as SimpleTyped
 import Contracts.Samples.Vesting qualified as Vesting
+import Contracts.WATMint qualified as WATMint
 import Jambhala.CLI.Types (JambContracts)
 
 -- Add your contracts to the `contracts` list below, i.e.:
 --  [
 --    MyContract.exports
 --  ]
-contracts :: JambContracts
-contracts =
-  []
+contracts :: JambContracts  
+contracts = [WATMint.watmValidatorExports, WATMint.watmPolicyExports]
 
 samples :: JambContracts
 samples =
