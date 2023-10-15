@@ -135,9 +135,9 @@ TN=$(token -p watm-fmp ADA)
 Build sign and sumbit transaction to mint.
 ```sh
 cardano-cli transaction build \
---tx-in $UA3 \
+--tx-in $UA \
 --tx-in $UWATM \
---tx-in-collateral $UA2 \
+--tx-in-collateral $UA \
 --tx-in-script-file $PLUTUS_SCRIPTS_PATH/watm-validator.plutus \
 --tx-in-redeemer-file $DATA_PATH/ADARedeemer.json \
 --tx-in-inline-datum-present \
