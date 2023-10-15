@@ -2,7 +2,7 @@
 ## **Description**
 The minting price of the NFT collection starts with value of 'BasePrice' , and increases with 'Step' after 'Threshold' tickets are minted, until 'MaxSupply' max no of tickets are minted.
 For the collection minting to start:
-- (1) The 'Issuer' should  first choose the parameters of the model based on the collection's size and pricing targets. (View on  https://www.desmos.com/calculator  P(n)=B+S\ *\operatorname{floor}((n-1)/\ T)/)
+- (1) The 'Issuer' should  first choose the parameters of the model based on the collection's size and pricing targets. (View on  https://www.desmos.com/calculator  P(n)=B +S * floor ((n-1) / T)
 - (2) The 'Issuer' should parameterize the contract with the 'AssetClass' of a NFT he owns.
 - (3) The 'Issuer' should lock a UTXO with the specified NFT and a datum containing the 'Whitelist' (hashes of vouchers) . The length of the 'Whitelist' must be equal witht he 'MaxSupply' parameter.
 - (4) The 'Issuer' distributes the vouchers in a method of is choice.
