@@ -1,5 +1,5 @@
 
-## **Generate Issuer's Keys**
+## **Generate issuer's Keys**
 ```sh
 key-gen issuer
 ``` 
@@ -126,19 +126,20 @@ TN=$(token -p watm-fmp ADA)
 Build sign and sumbit transaction to mint.
 ```sh
 cardano-cli transaction build \
---tx-in $UA \
+--tx-in $UA3 \
 --tx-in $UWATM \
---tx-in-collateral $UA \
+--tx-in-collateral $UA2 \
 --tx-in-script-file $PLUTUS_SCRIPTS_PATH/watm-validator.plutus \
 --tx-in-redeemer-file $DATA_PATH/ADARedeemer.json \
 --tx-in-inline-datum-present \
---tx-out $(addr issuer)+10000000 \
---tx-out $(addr watm-validator)+10000000+"1 $T" \
---tx-out-inline-datum-file $DATA_PATH/watmDatum1.json \
---change-address $(addr alice) \
 --mint "1 $TN" \
 --mint-script-file $PLUTUS_SCRIPTS_PATH/watm-fmp.plutus \
 --mint-redeemer-file  $DATA_PATH/unit.json \
+--tx-out $(addr watm-validator)+5000000+"1 $T" \
+--tx-out-inline-datum-file $DATA_PATH/watmDatum1.json \
+--tx-out $(addr alice)+2000000+"1 $TN" \
+--tx-out $(addr issuer)+1000000 \
+--change-address $(addr alice) \
 --witness-override 2 \
 --out-file $TX_PATH/alice-mint.raw
 

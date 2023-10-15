@@ -21,7 +21,7 @@ import GHC.Real (Integral (toInteger))
 import Jambhala.CLI.Types (ValidatorContract (unValidatorContract))
 import Jambhala.Plutus
 import Jambhala.Utils
-import Ledger (toTxInfoTxOut, toValidatorHash)
+import Ledger (toTxInfoTxOut, toValidatorHash, adaValueOf)
 import Ledger.Tx.Constraints (mustPayToOtherScriptWithInlineDatum)
 import Plutus.Script.Utils.Value
   ( AssetClass (AssetClass),
@@ -104,7 +104,7 @@ type VoucherHash = BuiltinByteString
 watmLambda :: ScriptParams -> WATMDatum -> VoucherCode -> ScriptContext -> Bool
 watmLambda ScriptParams {..} watmDatum@WATMDatum {fwMintPolicySymbol, whitelist} voucherCode (ScriptContext TxInfo {..} _) =
   let count = maxSupply #- plength whitelist -- The issuer must make sure the max supply is equal with the vouchers in whitelist.
-      nextPrice = priceModel basePrice step threshold count
+      nextPrice = priceModel basePrice step threshold count 
       voucherHash = sha2_256 voucherCode
    in pand
         [ "Available vouchers must exist !" `traceIfFalse` (count #>= 0),
@@ -131,7 +131,6 @@ checkMinting policy voucher minted =
 {-# INLINEABLE isInValue #-}
 isInValue :: (CurrencySymbol, TokenName, Integer) -> Value -> Bool
 isInValue (cs, tn, q) = pany (\(cs', tn', q') -> cs' #== cs && tn' #== tn && q #>= q') . flattenValue
-
 
 -- | Helper function to check if a 'TxOut' contains exactly 1 'ComeAndGoProofToken'.
 {-# INLINEABLE isNFTinTxOut #-}
@@ -203,7 +202,7 @@ compilePolicy = getFwdMintingPolicy . compileValidator
 -- This UTxO must be included as an input to your minting transaction.
 -- for emulator use: "899b40a640d4d3df5bb4a85b0d03be7df0509bcd7f6c1e99075423852a35a2a4" 10
 nftCurrencySymbol :: CurrencySymbol
-nftCurrencySymbol = getCurrencySymbol $ NFT.compileScript (NFT.PolicyParam (unsafeMkTxOutRef "c7dfd04e8e757bd893ea8a04f90dfa01a5ff6c1e04b2dc314394dabc1189fac2" 1) "jambtoken")
+nftCurrencySymbol = getCurrencySymbol $ NFT.compileScript (NFT.PolicyParam (unsafeMkTxOutRef "899b40a640d4d3df5bb4a85b0d03be7df0509bcd7f6c1e99075423852a35a2a4" 10) "jambtoken")
 
 nftAssetClass :: AssetClass
 nftAssetClass = AssetClass (nftCurrencySymbol, TokenName "jambtoken")
@@ -212,10 +211,10 @@ nftAssetClass = AssetClass (nftCurrencySymbol, TokenName "jambtoken")
 sampleScriptParams :: ScriptParams
 sampleScriptParams =
   ScriptParams
-    { issuer = "6ed20897111f7357220866dc58a0e6a74be213d7d32a8e991af07627",
+    { issuer = "dfc81e53e9c7ea8788fb9646058c674853e8275fa55591b4bb40bb79",
       cngpToken = nftAssetClass,
-      basePrice = 10,
-      step = 2,
+      basePrice = 10000000,
+      step = 2000000,
       threshold = 2,
       maxSupply = 10
     }
@@ -330,11 +329,11 @@ instance ValidatorEndpoints WATMValidator where
                 mconcat
                   [ oref `mustBeSpentWith` redeemerCode, --  CnGPToken output must be spent
                     mustPayToOtherScriptWithInlineDatum (validatorHash . unValidatorContract $ watmvalidator) (mkDatum updatedDatum) (lovelaceValueOf 5_000_000 <> assetClassValue nftAssetClass 1), -- CnGPToken must be locked back to the script with updated datum
-                    mustPayPKH (issuer scriptParams) (lovelaceValueOf (mintPrice * 1000000)), -- NFT price acccording to the price model and current state must be payed to the issuer.
+                    mustPayPKH (issuer scriptParams) (lovelaceValueOf mintPrice), -- NFT price acccording to the price model and current state must be payed to the issuer.
                     mustMint watmpolicy (TokenName redeemerCode) 1 -- NFT must be minted
                   ]
             }
-        logStr . logHL $ printf "Minted NFT with redeemer code %s at price %s ADA" (show redeemerCode) (show mintPrice)
+        logStr . logHL $ printf "Minted NFT with redeemer code %s at price %s lovelaces" (show redeemerCode) (show mintPrice )
       _ -> logStr . logHL $ "No or invalid CnGPT"
 
 test :: EmulatorTest

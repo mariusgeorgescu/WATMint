@@ -83,7 +83,7 @@ exports =
     -- To produce the finished minting policy, select an arbitrary UTxO at your address to consume during the mint.
     -- Apply unsafeMkTxOutRef to its TxHash and TxIx values to construct a TxOutRef value, and provide this as argument to the parameterized policy.
     -- This UTxO must be included as an input to your minting transaction.
-    oref = unsafeMkTxOutRef "c7dfd04e8e757bd893ea8a04f90dfa01a5ff6c1e04b2dc314394dabc1189fac2" 1 -- Replace with TxHash and TxIx values for a UTxO at your address
+    oref = unsafeMkTxOutRef "e40e283d2964bed7c7144fe1103e10c26975c7df1317b851948c51a4992acbeb" 0 -- Replace with TxHash and TxIx values for a UTxO at your address
     policy = compileScript (PolicyParam oref "jambtoken")
 
 -- 5. Define Emulator Component
