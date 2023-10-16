@@ -147,7 +147,7 @@ cardano-cli transaction build \
 --tx-out $(addr watm-validator)+5000000+"1 $T" \
 --tx-out-inline-datum-file $DATA_PATH/watmDatum1.json \
 --tx-out $(addr alice)+2000000+"1 $TN" \
---tx-out $(addr issuer)+1000000 \
+--tx-out $(addr issuer)+10000000 \
 --change-address $(addr alice) \
 --witness-override 2 \
 --out-file $TX_PATH/alice-mint.raw
